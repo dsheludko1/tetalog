@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TETA</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#1b2433;--muted:#5d6b82;--accent:#2f6bff;--accent-t:#fff;--line:#e3e8f1;--warn:#fff3d6;--warn-t:#5e4200;--code:#eef2fb;--ok:#1a8a4a;--err:#b3261e;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10151f;--card:#1a2230;--text:#eef2f9;--muted:#9aa8bf;--accent:#6b97ff;--accent-t:#0b1220;--line:#2a3447;--warn:#2d2616;--warn-t:#f2d58a;--code:#243049;--ok:#5fd68f;--err:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10151f;--card:#1a2230;--text:#eef2f9;--muted:#9aa8bf;--accent:#6b97ff;--accent-t:#0b1220;--line:#2a3447;--warn:#2d2616;--warn-t:#f2d58a;--code:#243049;--ok:#5fd68f;--err:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:640px;margin:0 auto;padding:16px 16px 40px}
+.langs{display:flex;gap:8px;margin-bottom:14px}
+button{font-family:inherit;cursor:pointer}
+.langs button{flex:1;padding:10px 0;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--text);font-weight:600;font-size:.95rem}
+.langs button[aria-pressed="true"]{background:var(--accent);color:var(--accent-t);border-color:var(--accent)}
+h1{font-size:1.6rem;line-height:1.2;margin:8px 0 6px}
+.lead{color:var(--muted);margin:0 0 20px}
+ol{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+ol>li{display:flex;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+.n{flex:none;width:36px;height:36px;border-radius:50%;background:var(--accent);color:var(--accent-t);font-weight:700;display:grid;place-items:center}
+.b{min-width:0;flex:1}
+h2{font-size:1.05rem;margin:0 0 4px}
+.b p{margin:0 0 8px;color:var(--muted);font-size:.98rem}
+label.f{display:block;font-size:.88rem;color:var(--muted);margin:10px 0 4px}
+input[type=text],input[type=number]{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);font:inherit}
+input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg span{display:block;text-align:center;padding:11px 6px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-size:.95rem}
+.seg input:checked+span{background:var(--accent);color:var(--accent-t);border-color:var(--accent);font-weight:600}
+.seg input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.seg label{position:relative}
+.hint{font-size:.85rem;color:var(--muted);margin:10px 0 0!important}
+.err{color:var(--err)!important;font-weight:600}
+.res{margin-top:14px;display:grid;gap:10px}
+.empty{background:var(--code);border-radius:10px;padding:12px;color:var(--muted);font-size:.92rem;margin:0}
+.out{background:var(--code);border-radius:12px;padding:10px 12px}
+.out small{display:block;color:var(--muted);font-size:.8rem}
+.out code{display:block;font:600 .98rem ui-monospace,Menlo,Consolas,monospace;overflow-wrap:anywhere;margin:2px 0 8px;color:var(--text)}
+.cp{width:100%;padding:10px;border:0;border-radius:10px;background:var(--accent);color:var(--accent-t);font-weight:600;font-size:.95rem}
+.cp.ok{background:var(--ok);color:#fff}
+a{color:var(--accent);font-weight:600;overflow-wrap:anywhere}
+.box{margin-top:18px;border-radius:16px;padding:16px}
+.box h2{margin:0 0 8px}
+.box ul{margin:0;padding-left:20px}
+.warn{background:var(--warn);color:var(--warn-t)}
+.help{background:var(--card);border:1px solid var(--line)}
+.prog{display:flex;flex-direction:column;gap:6px;margin:6px 0 14px;color:var(--muted);font-size:.9rem}
+.bar{height:6px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+.card>h2{font-size:1.25rem;margin:0 0 6px}
+.sub{color:var(--muted);margin:0 0 14px}
+.row{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
+.row p{margin:0}
+.nav{display:flex;gap:10px;margin-top:14px}
+.nav button{flex:1;padding:14px;border-radius:12px;font-size:1rem;font-weight:600;border:1px solid var(--line);background:var(--card);color:var(--text)}
+.nav .pri{background:var(--accent);color:var(--accent-t);border-color:var(--accent)}
+button:disabled{opacity:.4;cursor:not-allowed}
+.go{display:block;text-align:center;margin-top:16px;padding:16px;border-radius:14px;background:var(--accent);color:var(--accent-t);text-decoration:none;font-size:1.1rem}
+.card .help{margin-top:16px}
+.ms{background:#fff;color:#222;border:1px solid #d0d5dd;border-radius:12px;padding:16px;font-family:"Segoe UI",system-ui,sans-serif;max-width:320px;margin:12px auto 0;display:flex;flex-direction:column;gap:8px;position:relative}
+.ms .em{display:block;height:9px;width:62%;background:#c9ced6;border-radius:5px;margin-bottom:6px}
+.ms small{color:#666;font-size:.78rem}
+.ms b{font-size:1.1rem;line-height:1.25}
+.ms .sh{width:54px;height:60px;margin:2px auto;background:linear-gradient(#0a78d4,#2fb4f0);border-radius:26px 26px 30px 30px/22px 22px 36px 36px}
+.ms p{margin:0;font-size:.82rem;color:#333}
+.ms .st{border:1px solid #999;border-radius:6px;padding:6px 10px;width:max-content;font-size:.8rem}
+.ms u{color:#0067b8;font-size:.85rem;text-decoration:none;display:inline-block;width:max-content;max-width:100%;position:relative}
+.ms u.hi{margin-bottom:24px}
+.ms .nx{align-self:flex-end;background:#0067b8;color:#fff;padding:6px 16px;font-size:.82rem;opacity:.55}
+.ms .doc{border:1px solid #ddd;padding:10px;font-size:.8rem}
+.ms .bt{display:flex;gap:10px;margin-top:6px;margin-bottom:22px}
+.ms .bt span{padding:8px 12px;font-size:.82rem;border:1px solid #888}
+.ms .bt .ac{background:#0067b8;color:#fff;border-color:#0067b8;position:relative}
+.hi{outline:2px solid #e8590c;outline-offset:3px;border-radius:3px}
+.hi::after{content:"";position:absolute;inset:-6px;border:2px solid #e8590c;border-radius:6px;animation:pl 1.4s ease-out infinite}
+.hi em{position:absolute;right:-6px;bottom:-30px;font-style:normal;font-size:1.6rem;animation:tp 1.4s ease-in-out infinite}
+@keyframes pl{0%{transform:scale(.9);opacity:.9}100%{transform:scale(1.25);opacity:0}}
+@keyframes tp{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px) scale(.92)}}
+@media (prefers-reduced-motion:reduce){.hi::after,.hi em{animation:none}}
+.cap{color:var(--muted);font-size:.8rem;text-align:center;margin:8px 0 0}
+.hero{text-align:center;padding:8px 4px 16px}
+.hero .ic{font-size:2.6rem;display:block;line-height:1.2}
+.hero h2{font-size:1.35rem;margin:6px 0}
+.hero p{margin:0;color:var(--muted)}
+.info{display:flex;gap:12px;align-items:flex-start;padding:14px;margin-top:10px;background:var(--code);border-radius:14px}
+.info .ic{font-size:1.6rem;line-height:1}
+.info h3{margin:0 0 2px;font-size:1rem}
+.info p{margin:0;color:var(--muted);font-size:.95rem}
+.info.key{background:transparent;border:2px solid var(--accent)}
+.ms .fld{border-bottom:2px solid #0067b8;padding:8px 0;color:#777;font-size:.85rem;position:relative}
+.ms .btn{align-self:flex-end;background:#0067b8;color:#fff;padding:7px 18px;font-size:.85rem;position:relative}
+.ms .btn.hi{margin-bottom:28px}
+.ms .opt{border:1px solid #888;padding:8px;font-size:.82rem;margin-top:6px}
+</style>
+</head>
+<body>
+<main>
+<div class="langs" id="langs"><button data-l="uk">UK</button><button data-l="pl">PL</button><button data-l="en">EN</button><button data-l="es">ES</button></div>
+<div id="app"></div>
+</main>
+<script>
+var T={
+pl:{si:"Zaloguj się",ph:"E-mail, telefon lub Skype",cant:"Nie możesz uzyskać dostępu do swojego konta?",sio:"Opcje logowania",pt:"Wprowadź hasło",forgot:"Nie pamiętam hasła",sin:"Zaloguj się",l0t:"Najpierw logowanie",l0x:"Po otwarciu strony TETA Microsoft najpierw poprosi Cię o login i hasło. Dopiero potem przeniesie Cię do ustawień 2FA.",l1:"Wpisz swój login (adres e-mail) i kliknij «{n}». Nie klikaj «{x}».",l2:"Wpisz hasło i kliknij «{s}».",i0t:"Czym jest TETA?",i0l:"TETA to miejsce, w którym znajduje się Twój grafik pracy online. Możesz go sprawdzić w dowolnym momencie.",i1t:"Zawsze pod ręką",i1x:"Wejdź na stronę w przeglądarce telefonu lub komputera i zobacz, kiedy pracujesz, a kiedy masz wolne.",i2t:"Kto planuje grafik?",i2x:"Zmiany w grafiku oraz planowanie grafiku na następny miesiąc zależą wyłącznie od Twojego lidera-brygadzisty. Jeśli masz pytania lub zauważysz nieścisłości, zwróć się, proszę, do swojego lidera.",rd:"Dane przyjęte – możesz kliknąć «Dalej». Login i hasło pokażemy na ostatnim kroku.",ms1:"Metoda 1 z 2",ms2:"Instalacja Microsoft Authenticator",ms3:"Zainstaluj aplikację na urządzeniu mobilnym, a następnie wróć tutaj.",l1:"Skonfiguruj inną aplikację uwierzytelniającą",oth:"Inne opcje",nxt:"Dalej",tt:"Warunki użytkowania Answear &amp; WearMedicine",acc:"Zaakceptuj",dec:"Odrzuć",cap:"Rysunek poglądowy. Ekran na Twoim urządzeniu może wyglądać nieco inaczej.",f1t:"2FA, część 1: numer telefonu",f1x:"Zobaczysz ekran instalacji aplikacji – nie instaluj jej. Kliknij niebieski link «{o}», wybierz numer telefonu i wpisz swój prywatny numer.",f2t:"2FA, część 2: adres e-mail",f2x:"Po dodaniu numeru ekran wróci do początku – to normalne. Znowu kliknij «{o}», wybierz adres e-mail i wpisz swój prywatny adres.",f3t:"Zaakceptuj warunki",f3x:"Na koniec pojawią się warunki użytkowania firmy. Przeczytaj je i kliknij «{a}».",st:"Krok",of:"z",nx:"Dalej",bk:"Wstecz",s1:"Najpierw przeczytaj",s1t:"Zanim otworzysz stronę TETA, uważnie zapoznaj się z instrukcją.",s3:"Co zrobisz po otwarciu strony",p1:"Wpisz login i hasło z poprzedniego kroku.",p2:"Włącz 2FA: podaj prywatny numer telefonu i prywatny adres e-mail. Posłużą do potwierdzenia tożsamości i odzyskania dostępu do konta.",p3:"Po zalogowaniu zmień hasło konta Microsoft na własne.",s4:"Wszystko gotowe",s4t:"Skopiuj login i hasło, a potem otwórz stronę TETA.",op:"Otwórz TETA",t:"Aktywacja konta w systemie TETA",lead:"Wpisz swoje dane – otrzymasz gotowy login i hasło do skopiowania.",
+a:"Wpisz swoje dane",nm:"Imię",sn:"Nazwisko",ty:"Rodzaj zatrudnienia",ta:"Agencja",tb:"Umowa o pracę",yr:"Rok rozpoczęcia pracy w firmie",
+hint:"Masz dwa imiona lub dwa nazwiska? Wpisz wszystkie – tak, jak w dokumentach. Strona sama wybierze te, które pasują do Twojego loginu roboczego.",lg:"Twój login roboczy",lh:"Login otrzymany na magazynie, np. dpas.",us:"W systemie jako:",nf:"Login roboczy nie pasuje do wpisanych danych – użyto pierwszego imienia i ostatniego nazwiska. Sprawdź dane lub zapytaj przełożonego.",
+lat:"Wpisz imię i nazwisko literami łacińskimi, tak jak w umowie.",yerr:"Podaj poprawny rok (4 cyfry).",
+rl:"Twój login",rp:"Twoje hasło",cp:"Kopiuj",ok:"Skopiowano",em:"Uzupełnij wszystkie pola – tutaj pojawią się login i hasło.",
+b:"Zaloguj się",bt:"Otwórz stronę TETA, wklej login i hasło.",
+c:"Włącz uwierzytelnianie dwuskładnikowe (2FA)",ct:"Przy pierwszym logowaniu podaj swój prywatny numer telefonu i prywatny adres e-mail. Posłużą do potwierdzania tożsamości i odzyskiwania dostępu do konta.",
+d:"Gotowe",dt:"Po zalogowaniu i skonfigurowaniu 2FA konto zostanie aktywowane.",
+w:"Ważne dla Twojego bezpieczeństwa",wl:["Po pierwszym logowaniu zmień hasło swojego konta Microsoft na własne.","Skonfigurowanie 2FA jest obowiązkowe – bez tego konto nie zostanie aktywowane.","Nie udostępniaj hasła ani kodów weryfikacyjnych nikomu."],
+h:"Nie możesz się zalogować?",hl:["Sprawdź, czy rodzaj zatrudnienia i rok są prawidłowe.","Sprawdź pisownię imienia i nazwiska.","Zgłoś się do przełożonego lub działu kadr."]},
+uk:{si:"Увійти",ph:"Електронна пошта, телефон або Skype",cant:"Не вдається отримати доступ до облікового запису?",sio:"Параметри входу",pt:"Введіть пароль",forgot:"Я не памʼятаю свій пароль",sin:"Увійти",l0t:"Спочатку вхід",l0x:"Після відкриття сайту TETA Microsoft спершу попросить вас ввести логін і пароль. Лише після цього перенесе вас до налаштувань 2FA.",l1:"Введіть свій логін (адресу електронної пошти) і натисніть «{n}». Не натискайте «{x}».",l2:"Введіть пароль і натисніть «{s}».",i0t:"Що таке TETA?",i0l:"TETA – це місце, де знаходиться ваш графік роботи онлайн. Ви можете переглянути його будь-коли.",i1t:"Завжди під рукою",i1x:"Відкрийте сайт у браузері телефона чи компʼютера й подивіться, коли ви працюєте, а коли маєте вихідний.",i2t:"Хто планує графік?",i2x:"Зміни в графіку та планування графіка на наступний місяць залежать виключно від вашого лідера-бригадира. Якщо у вас виникли запитання або неточності, будь ласка, зверніться до свого лідера.",rd:"Дані прийнято – натисніть «Далі». Логін і пароль покажемо на останньому кроці.",ms1:"Метод 1 з 2",ms2:"Інсталяція Microsoft Authenticator",ms3:"Установіть застосунок на мобільний пристрій, а потім поверніться сюди.",l1:"Налаштувати інший застосунок для перевірки автентичності",oth:"Інші параметри",nxt:"Далі",tt:"Умови використання Answear &amp; WearMedicine",acc:"Прийняти",dec:"Відхилити",cap:"Умовне зображення. Екран на вашому пристрої може трохи відрізнятися.",f1t:"2FA, частина 1: номер телефону",f1x:"Зʼявиться екран встановлення застосунку – не встановлюйте його. Натисніть синє посилання «{o}», оберіть номер телефону й введіть свій приватний номер.",f2t:"2FA, частина 2: електронна пошта",f2x:"Після додавання номера екран повернеться на початок – це нормально. Знову натисніть «{o}», оберіть електронну пошту й введіть свою приватну адресу.",f3t:"Прийміть умови",f3x:"Наприкінці зʼявляться умови використання компанії. Прочитайте їх і натисніть «{a}».",st:"Крок",of:"з",nx:"Далі",bk:"Назад",s1:"Спочатку прочитайте",s1t:"Перш ніж відкривати сайт TETA, уважно ознайомтесь з інструкцією.",s3:"Що ви зробите після відкриття сайту",p1:"Введіть логін і пароль з попереднього кроку.",p2:"Увімкніть 2FA: вкажіть приватний номер телефону та приватну адресу електронної пошти. Вони потрібні для підтвердження особи та відновлення доступу до облікового запису.",p3:"Після входу змініть пароль облікового запису Microsoft на власний.",s4:"Усе готово",s4t:"Скопіюйте логін і пароль, а потім відкрийте сайт TETA.",op:"Відкрити TETA",t:"Активація облікового запису в системі TETA",lead:"Введіть свої дані – отримаєте готовий логін і пароль, які можна скопіювати.",
+a:"Введіть свої дані",nm:"Імʼя",sn:"Прізвище",ty:"Тип працевлаштування",ta:"Агенція",tb:"Трудовий договір",yr:"Рік початку роботи в компанії",
+hint:"Маєте два імені або два прізвища? Введіть усі – як у документах. Сторінка сама обере ті, що відповідають вашому робочому логіну.",lg:"Ваш робочий логін",lh:"Логін, який ви отримали на складі, наприклад dpas.",us:"У системі як:",nf:"Робочий логін не відповідає введеним даним – використано перше імʼя та останнє прізвище. Перевірте дані або запитайте керівника.",
+lat:"Введіть імʼя та прізвище латинськими літерами, як у договорі.",yerr:"Вкажіть правильний рік (4 цифри).",
+rl:"Ваш логін",rp:"Ваш пароль",cp:"Копіювати",ok:"Скопійовано",em:"Заповніть усі поля – тут зʼявляться логін і пароль.",
+b:"Увійдіть",bt:"Відкрийте сайт TETA, вставте логін і пароль.",
+c:"Увімкніть двофакторну автентифікацію (2FA)",ct:"Під час першого входу вкажіть свій приватний номер телефону та приватну адресу електронної пошти. Вони потрібні для підтвердження особи та відновлення доступу до облікового запису.",
+d:"Готово",dt:"Після входу та налаштування 2FA обліковий запис буде активовано.",
+w:"Важливо для вашої безпеки",wl:["Після першого входу змініть пароль свого облікового запису Microsoft на власний.","Налаштування 2FA обовʼязкове – без нього обліковий запис не буде активовано.","Нікому не повідомляйте пароль і коди підтвердження."],
+h:"Не вдається увійти?",hl:["Перевірте тип працевлаштування та рік.","Перевірте написання імені та прізвища.","Зверніться до керівника або у відділ кадрів."]},
+en:{si:"Sign in",ph:"Email, phone, or Skype",cant:"Can’t access your account?",sio:"Sign-in options",pt:"Enter password",forgot:"Forgot my password",sin:"Sign in",l0t:"Sign in first",l0x:"After you open the TETA website, Microsoft will first ask for your login and password. Only after that will it take you to the 2FA setup.",l1:"Enter your login (email address) and tap “{n}”. Do not tap “{x}”.",l2:"Enter your password and tap “{s}”.",i0t:"What is TETA?",i0l:"TETA is the place where your work schedule lives online. You can check it any time.",i1t:"Always at hand",i1x:"Open the website in your phone or computer browser and see when you work and when you have days off.",i2t:"Who plans the schedule?",i2x:"Changes to your schedule and planning the schedule for next month depend entirely on your team leader (brigade leader). If you have any questions or notice any inaccuracies, please contact your leader.",rd:"Details accepted – tap “Next”. Your login and password will be shown on the last step.",ms1:"Method 1 of 2",ms2:"Install Microsoft Authenticator",ms3:"Install the app on your mobile device, then come back here.",l1:"Set up a different authenticator app",oth:"Other options",nxt:"Next",tt:"Answear &amp; WearMedicine terms of use",acc:"Accept",dec:"Decline",cap:"Illustration. The screen on your device may look slightly different.",f1t:"2FA, part 1: phone number",f1x:"You will see a screen asking you to install an app – do not install it. Tap the blue link “{o}”, choose phone number and enter your personal number.",f2t:"2FA, part 2: email",f2x:"After you add the number, the screen goes back to the start – that is normal. Tap “{o}” again, choose email and enter your personal address.",f3t:"Accept the terms",f3x:"At the end, the company’s terms of use will appear. Read them and tap “{a}”.",st:"Step",of:"of",nx:"Next",bk:"Back",s1:"Read this first",s1t:"Before you open the TETA website, read the instructions carefully.",s3:"What you will do on the website",p1:"Enter the login and password from the previous step.",p2:"Turn on 2FA: provide your personal phone number and personal email address. They are used to confirm your identity and recover access to your account.",p3:"After signing in, change your Microsoft account password to your own.",s4:"All set",s4t:"Copy your login and password, then open the TETA website.",op:"Open TETA",t:"Activate your TETA account",lead:"Enter your details – you will get a ready login and password to copy.",
+a:"Enter your details",nm:"First name",sn:"Surname",ty:"Type of employment",ta:"Agency",tb:"Employment contract",yr:"Year you started working at the company",
+hint:"Do you have two first names or two surnames? Enter all of them, as in your documents. The page will pick the ones that match your work login.",lg:"Your work login",lh:"The login you received at the warehouse, e.g. dpas.",us:"In the system as:",nf:"Your work login does not match the details entered – the first first name and the last surname were used. Check your details or ask your supervisor.",
+lat:"Enter your name and surname in Latin letters, as in your contract.",yerr:"Enter a valid year (4 digits).",
+rl:"Your login",rp:"Your password",cp:"Copy",ok:"Copied",em:"Fill in all fields – your login and password will appear here.",
+b:"Sign in",bt:"Open the TETA website and paste your login and password.",
+c:"Turn on two-factor authentication (2FA)",ct:"At your first sign-in, provide your personal phone number and personal email address. They are used to confirm your identity and to recover access to your account.",
+d:"Done",dt:"Once you sign in and set up 2FA, your account will be activated.",
+w:"Important for your security",wl:["After your first sign-in, change the password of your Microsoft account to your own.","Setting up 2FA is mandatory – without it your account will not be activated.","Never share your password or verification codes with anyone."],
+h:"Can’t sign in?",hl:["Check your type of employment and year.","Check the spelling of your name and surname.","Contact your supervisor or HR."]},
+es:{si:"Iniciar sesión",ph:"Correo electrónico, teléfono o Skype",cant:"¿No puedes acceder a tu cuenta?",sio:"Opciones de inicio de sesión",pt:"Escribir contraseña",forgot:"Olvidé mi contraseña",sin:"Iniciar sesión",l0t:"Primero, inicia sesión",l0x:"Después de abrir el sitio de TETA, Microsoft primero te pedirá tu usuario y contraseña. Solo después te llevará a la configuración de la 2FA.",l1:"Escribe tu usuario (correo electrónico) y toca «{n}». No toques «{x}».",l2:"Escribe tu contraseña y toca «{s}».",i0t:"¿Qué es TETA?",i0l:"TETA es el lugar donde está tu horario de trabajo en línea. Puedes consultarlo en cualquier momento.",i1t:"Siempre a la mano",i1x:"Abre el sitio en el navegador de tu celular o computador y mira cuándo trabajas y cuándo tienes día libre.",i2t:"¿Quién organiza el horario?",i2x:"Los cambios en tu horario y la planificación del horario del próximo mes dependen únicamente de tu líder de brigada. Si tienes preguntas o notas alguna inexactitud, por favor habla con tu líder.",rd:"Datos aceptados; toca «Siguiente». Tu usuario y contraseña se mostrarán en el último paso.",ms1:"Método 1 de 2",ms2:"Instalar Microsoft Authenticator",ms3:"Instala la aplicación en tu dispositivo móvil y vuelve aquí.",l1:"Configurar otra aplicación de autenticación",oth:"Otras opciones",nxt:"Siguiente",tt:"Términos de uso de Answear &amp; WearMedicine",acc:"Aceptar",dec:"Rechazar",cap:"Ilustración. La pantalla en tu dispositivo puede verse un poco diferente.",f1t:"2FA, parte 1: número de teléfono",f1x:"Verás una pantalla para instalar una aplicación; no la instales. Toca el enlace azul «{o}», elige el número de teléfono y escribe tu número personal.",f2t:"2FA, parte 2: correo electrónico",f2x:"Al agregar el número, la pantalla vuelve al inicio; es normal. Toca de nuevo «{o}», elige el correo electrónico y escribe tu dirección personal.",f3t:"Acepta los términos",f3x:"Al final aparecerán los términos de uso de la empresa. Léelos y toca «{a}».",st:"Paso",of:"de",nx:"Siguiente",bk:"Atrás",s1:"Lee esto primero",s1t:"Antes de abrir el sitio de TETA, lee con atención las instrucciones.",s3:"Qué harás en el sitio",p1:"Escribe el usuario y la contraseña del paso anterior.",p2:"Activa la 2FA: indica tu número de teléfono personal y tu correo electrónico personal. Se usan para confirmar tu identidad y recuperar el acceso a tu cuenta.",p3:"Después de ingresar, cambia la contraseña de tu cuenta de Microsoft por una propia.",s4:"Todo listo",s4t:"Copia tu usuario y contraseña y luego abre el sitio de TETA.",op:"Abrir TETA",t:"Activa tu cuenta en el sistema TETA",lead:"Escribe tus datos y obtendrás tu usuario y contraseña listos para copiar.",
+a:"Escribe tus datos",nm:"Nombre",sn:"Apellido",ty:"Tipo de contratación",ta:"Agencia",tb:"Contrato de trabajo",yr:"Año en que empezaste a trabajar en la empresa",
+hint:"¿Tienes dos nombres o dos apellidos? Escríbelos todos, como en tus documentos. La página elegirá los que coincidan con tu usuario de trabajo.",lg:"Tu usuario de trabajo",lh:"El usuario que recibiste en el almacén, por ejemplo dpas.",us:"En el sistema como:",nf:"Tu usuario de trabajo no coincide con los datos escritos; se usó el primer nombre y el último apellido. Revisa tus datos o pregunta a tu supervisor.",
+lat:"Escribe tu nombre y apellido con letras latinas, como en tu contrato.",yerr:"Escribe un año válido (4 dígitos).",
+rl:"Tu usuario",rp:"Tu contraseña",cp:"Copiar",ok:"Copiado",em:"Completa todos los campos; aquí aparecerán tu usuario y contraseña.",
+b:"Inicia sesión",bt:"Abre el sitio de TETA y pega tu usuario y contraseña.",
+c:"Activa la autenticación de dos factores (2FA)",ct:"En tu primer ingreso, indica tu número de teléfono personal y tu correo electrónico personal. Se usan para confirmar tu identidad y recuperar el acceso a tu cuenta.",
+d:"Listo",dt:"Cuando ingreses y configures la 2FA, tu cuenta quedará activada.",
+w:"Importante para tu seguridad",wl:["Después de tu primer ingreso, cambia la contraseña de tu cuenta de Microsoft por una propia.","Configurar la 2FA es obligatorio; sin ella tu cuenta no se activará.","No compartas tu contraseña ni tus códigos de verificación con nadie."],
+h:"¿No puedes ingresar?",hl:["Revisa tu tipo de contratación y el año.","Revisa cómo está escrito tu nombre y apellido.","Habla con tu supervisor o con Recursos Humanos."]}
+};
+var lang="pl",S={n:"",s:"",l:"",t:"a",y:String(new Date().getFullYear())};
+function li(a){return a.map(function(x){return "<li>"+x+"</li>"}).join("")}
+function clean(x){return x.trim().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/ł/g,"l").replace(/Ł/g,"L").replace(/[\s'’]/g,"")}
+function esc(x){return x.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+var St=0;
+function calc(){
+var d=T[lang];
+if(/[\u0400-\u04FF]/.test(S.n+S.s+S.l))return {m:d.lat,e:1};
+var wl=function(x){return x.trim().split(/\s+/).map(clean).filter(Boolean)};
+var ns=wl(S.n),ss=wl(S.s),lg=clean(S.l).toLowerCase(),n="",s="",ok=false;
+if(ns.length&&ss.length){n=ns[0];s=ss[ss.length-1];
+if(lg.length>1){var c=lg.charAt(0),rest=lg.slice(1);
+var fn=ns.filter(function(w){return w.toLowerCase().charAt(0)===c})[0];
+var fs=ss.filter(function(w){var x=w.toLowerCase();return x===rest||x.indexOf(rest)===0})[0];
+if(fn&&fs){n=fn;s=fs;ok=true}}}
+if(!n||!s||lg.length<2)return {m:d.em};
+if(!/^\d{4}$/.test(S.y))return {m:d.yerr,e:1};
+var cap=function(x){return x.charAt(0).toUpperCase()+x.slice(1)};
+return {ok:ok,nm:cap(n)+" "+cap(s),login:(n+"."+s).toLowerCase()+(S.t==="a"?"@aptdc.answear.com":"@dc.answear.com"),pw:"Pass@Ress*"+n.charAt(0).toUpperCase()+s.charAt(0).toUpperCase()+"!"+S.y};
+}
+function creds(c){var d=T[lang];return (c.ok?"":'<p class="empty err">'+d.nf+'</p>')+'<p class="hint" style="margin:0!important">'+d.us+" <b>"+esc(c.nm)+"</b></p>"+box(d.rl,c.login)+box(d.rp,c.pw)}
+function msg(c){return '<p class="empty'+(c.e?" err":"")+'">'+c.m+'</p>'}
+function pre(c){var d=T[lang];return (c.ok?"":'<p class="empty err">'+d.nf+'</p>')+'<p class="hint" style="margin:0!important">'+d.us+" <b>"+esc(c.nm)+"</b></p><p class=\"empty\">"+d.rd+"</p>"}
+function update(){
+var c=calc(),r=document.getElementById("res");
+if(r)r.innerHTML=c.login?pre(c):msg(c);
+var nx=document.getElementById("nx");
+if(nx&&St===2)nx.disabled=!c.login;
+}
+function sub(t,d){return t.replace("{o}",d.oth).replace("{a}",d.acc)}
+function auth(d){return '<div class="ms" aria-hidden="true"><i class="em"></i><small>'+d.ms1+'</small><b>'+d.ms2+'</b><div class="sh"></div><p>'+d.ms3+'</p><div class="st">App Store</div><u>'+d.l1+'</u><u class="hi">'+d.oth+'<em>👆</em></u><span class="nx">'+d.nxt+'</span></div><p class="cap">'+d.cap+'</p>'}
+function terms(d){return '<div class="ms" aria-hidden="true"><i class="em"></i><b>'+d.tt+'</b><div class="doc">Answear.com S.A.</div><div class="bt"><span>'+d.dec+'</span><span class="ac hi">'+d.acc+'<em>👆</em></span></div></div><p class="cap">'+d.cap+'</p>'}
+function sub2(t,d){return t.replace("{n}",d.nxt).replace("{x}",d.sio).replace("{s}",d.sin)}
+function login1(d){return '<div class="ms" aria-hidden="true"><i class="em"></i><b>'+d.si+'</b><div class="fld hi">'+d.ph+'</div><u>'+d.cant+'</u><span class="btn hi">'+d.nxt+'<em>👆</em></span><div class="opt">🔑 '+d.sio+'</div></div>'}
+function login2(d){return '<div class="ms" aria-hidden="true"><i class="em"></i><b>'+d.pt+'</b><div class="fld hi">••••••••••••</div><u>'+d.forgot+'</u><span class="btn hi">'+d.sin+'<em>👆</em></span></div>'}
+function render(){
+var d=T[lang],c=calc();
+document.documentElement.lang=lang;document.title="TETA – "+d.t;
+document.querySelectorAll("#langs button").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.l===lang)});
+var h='<h1>'+d.t+'</h1><div class="prog"><span>'+d.st+" "+(St+1)+" "+d.of+' 8</span><div class="bar"><i style="width:'+Math.round((St+1)*100/8)+'%"></i></div></div><div class="card">';
+if(St===0){h+='<div class="hero"><span class="ic">📅</span><h2>'+d.i0t+'</h2><p>'+d.i0l+'</p></div><div class="info"><span class="ic">🕒</span><div><h3>'+d.i1t+'</h3><p>'+d.i1x+'</p></div></div><div class="info key"><span class="ic">👤</span><div><h3>'+d.i2t+'</h3><p>'+d.i2x+'</p></div></div>'}
+if(St===1){h+='<h2>'+d.s1+'</h2><p class="sub">'+d.s1t+'</p><section class="box warn" style="margin-top:0"><h2>'+d.w+'</h2><ul>'+li(d.wl)+'</ul></section>'}
+if(St===2){h+='<h2>'+d.a+'</h2>'+
+'<label class="f" for="fn">'+d.nm+'</label><input type="text" id="fn" autocomplete="off" autocapitalize="words" spellcheck="false" value="'+esc(S.n).replace(/"/g,"&quot;")+'">'+
+'<label class="f" for="fs">'+d.sn+'</label><input type="text" id="fs" autocomplete="off" autocapitalize="words" spellcheck="false" value="'+esc(S.s).replace(/"/g,"&quot;")+'">'+
+'<label class="f" for="fl">'+d.lg+'</label><input type="text" id="fl" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="dpas" value="'+esc(S.l).replace(/"/g,"&quot;")+'"><p class="hint" style="margin-top:4px!important">'+d.lh+'</p>'+
+'<label class="f">'+d.ty+'</label><div class="seg"><label><input type="radio" name="t" value="a"'+(S.t==="a"?" checked":"")+'><span>'+d.ta+'</span></label><label><input type="radio" name="t" value="b"'+(S.t==="b"?" checked":"")+'><span>'+d.tb+'</span></label></div>'+
+'<label class="f" for="fy">'+d.yr+'</label><input type="number" id="fy" inputmode="numeric" min="2000" max="2100" value="'+S.y+'">'+
+'<p class="hint">'+d.hint+'</p><div class="res" id="res"></div>'}
+if(St===3){h+='<h2>'+d.l0t+'</h2><p class="sub">'+d.l0x+'</p><div class="row"><span class="n">1</span><p>'+sub2(d.l1,d)+'</p></div>'+login1(d)+'<div class="row"><span class="n">2</span><p>'+sub2(d.l2,d)+'</p></div>'+login2(d)+'<p class="cap">'+d.cap+'</p>'}
+if(St===4){h+='<h2>'+d.f1t+'</h2><p class="sub">'+sub(d.f1x,d)+'</p>'+auth(d)}
+if(St===5){h+='<h2>'+d.f2t+'</h2><p class="sub">'+sub(d.f2x,d)+'</p>'+auth(d)}
+if(St===6){h+='<h2>'+d.f3t+'</h2><p class="sub">'+sub(d.f3x,d)+'</p>'+terms(d)}
+if(St===7){h+='<h2>'+d.s4+'</h2><p class="sub">'+d.s4t+'</p><div class="res">'+(c.login?creds(c):msg(c))+'</div><a class="go" href="https://teta.ansbbq.com" target="_blank" rel="noopener">'+d.op+' ↗</a><section class="box help"><h2>'+d.h+'</h2><ul>'+li(d.hl)+'</ul></section>'}
+h+='</div><div class="nav">'+(St>0?'<button id="bk">'+d.bk+'</button>':"")+(St<7?'<button class="pri" id="nx">'+d.nx+'</button>':"")+'</div>';
+document.getElementById("app").innerHTML=h;
+update();
+}
+function box(l,v){return '<div class="out"><small>'+l+'</small><code>'+esc(v)+'</code><button class="cp" data-copy="'+esc(v)+'">'+T[lang].cp+'</button></div>'}
+function copy(t,btn){
+var done=function(){var o=btn.textContent;btn.textContent=T[lang].ok;btn.classList.add("ok");setTimeout(function(){btn.textContent=T[lang].cp;btn.classList.remove("ok")},1600)};
+var fb=function(){try{var a=document.createElement("textarea");a.value=t;a.style.position="fixed";a.style.opacity="0";document.body.appendChild(a);a.select();document.execCommand("copy");document.body.removeChild(a);done()}catch(e){}};
+try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,fb)}else{fb()}}catch(e){fb()}
+}
+var app=document.getElementById("app");
+app.addEventListener("input",function(e){var i=e.target.id;if(i==="fn")S.n=e.target.value;else if(i==="fs")S.s=e.target.value;else if(i==="fl")S.l=e.target.value;else if(i==="fy")S.y=e.target.value;else return;update()});
+app.addEventListener("change",function(e){if(e.target.name==="t"){S.t=e.target.value;update()}});
+app.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("button[data-copy]");if(b)copy(b.getAttribute("data-copy").replace(/&amp;/g,"&").replace(/&lt;/g,"<"),b)});
+document.getElementById("langs").addEventListener("click",function(e){var l=e.target.dataset&&e.target.dataset.l;if(l){lang=l;render()}});
+app.addEventListener("click",function(e){var t=e.target.closest&&e.target.closest("button");if(!t)return;if(t.id==="nx"&&!t.disabled){St=Math.min(7,St+1)}else if(t.id==="bk"){St=Math.max(0,St-1)}else return;render();window.scrollTo(0,0)});
+var nl=(navigator.language||"pl").slice(0,2).toLowerCase();
+lang=T[nl]?nl:"pl";
+render();
+</script>
+</body>
+</html>
